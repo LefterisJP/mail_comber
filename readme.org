@@ -38,6 +38,7 @@ optional arguments:
 
 #+END_SRC
 
+** Options
 They are:
 - *dir*:
   The directory to search for mails.
@@ -48,3 +49,15 @@ They are:
   A numeric limit on how many emails to act upon. If given then once this many emails have been acted upon the script will stop.
 - *dry*:
   Will perform a dry run. Won't act on anything, but simply say what it would have done if the argument had not been given.
+
+** Examples
+
+*** Delete all mail sent from github notifications
+#+BEGIN_SRC
+./mail_comber.py --dir MAILDIR --from-pattern ".*notifications@github\.com.*"
+#+END_SRC
+
+*** Delete all mail containing [llvm-dev] in the subject
+#+BEGIN_SRC
+./mail_comber.py --dir MAILDIR --subject-pattern ".*\[llvm-dev\].*"
+#+END_SRC
