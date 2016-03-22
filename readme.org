@@ -19,7 +19,8 @@ At the time of writting of the readme the options can be seen below:
 usage: mail_comber.py [-h] [--dir DIR] [--subject-pattern SUBJECT_PATTERN]
                       [--from-pattern FROM_PATTERN] [--to-pattern TO_PATTERN]
                       [--mailing-list-pattern MAILING_LIST_PATTERN]
-                      [--limit LIMIT] [--dry]
+                      [--list-id-pattern LIST_ID_PATTERN] [--limit LIMIT]
+                      [--dry]
 
 Mail comber
 
@@ -27,18 +28,20 @@ optional arguments:
   -h, --help            show this help message and exit
   --dir DIR             The directory to work in
   --subject-pattern SUBJECT_PATTERN
-                        Regular expression to match in the email subject
+                        Regular expression to match in the email's subject
   --from-pattern FROM_PATTERN
-                        Regular expression to match in the email from header
+                        Regular expression to match in the email's From header
   --to-pattern TO_PATTERN
-                        Regular expression to match in the email to header
+                        Regular expression to match in the email's To header
   --mailing-list-pattern MAILING_LIST_PATTERN
                         Regular expression to match in the email's Mailing-
                         List header
+  --list-id-pattern LIST_ID_PATTERN
+                        Regular expression to match in the email's List-Id
+                        header
   --limit LIMIT         Set a limit to the number of emails to scan
   --dry                 When given, will not actually delete anything but just
                         run through the script's steps
-
 #+END_SRC
 
 ** Options
@@ -68,4 +71,9 @@ They are:
 *** Delete all mail from the meetup.com mailing list
 #+BEGIN_SRC 
 ./mail_comber.py --dir MAILDIR --mailing-list-pattern ".*@meetup\.com.*" 
+#+END_SRC
+
+*** Delete all mail matching the LLVMDev List-Id header
+#+BEGIN_SRC 
+./mail_comber.py --dir MAILDIR  --list-id-pattern ".*LLVM Developers.*"
 #+END_SRC

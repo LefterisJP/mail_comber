@@ -44,6 +44,8 @@ class Comber():
             self.to_re = re.compile(args.to_pattern)
         if args.mailing_list_pattern:
             self.mailing_list_re = re.compile(args.mailing_list_pattern)
+        if args.list_id_pattern:
+            self.list_id_re = re.compile(args.list_id_pattern)
 
     def check_header(self, headers, got_match, header):
         attr = '{0}_re'.format(header.replace("-", "_"))
@@ -69,6 +71,9 @@ class Comber():
         if not success:
             return False
         success, match = self.check_header(headers, match, 'mailing-list')
+        if not success:
+            return False
+        success, match = self.check_header(headers, match, 'list-id')
         if not success:
             return False
 
@@ -111,19 +116,23 @@ if __name__ == "__main__":
     p.add_argument("--dir", default=".", help="The directory to work in")
     p.add_argument(
         "--subject-pattern",
-        help="Regular expression to match in the email subject"
+        help="Regular expression to match in the email's subject"
     )
     p.add_argument(
         "--from-pattern",
-        help="Regular expression to match in the email from header"
+        help="Regular expression to match in the email's From header"
     )
     p.add_argument(
         "--to-pattern",
-        help="Regular expression to match in the email to header"
+        help="Regular expression to match in the email's To header"
     )
     p.add_argument(
         "--mailing-list-pattern",
         help="Regular expression to match in the email's Mailing-List header"
+    )
+    p.add_argument(
+        "--list-id-pattern",
+        help="Regular expression to match in the email's List-Id header"
     )
     p.add_argument(
         "--limit",
