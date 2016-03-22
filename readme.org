@@ -1,4 +1,7 @@
 
+* Disclaimer
+Read the source, understand what it does and don't blame me if you lose data. Use the script at your own risk.
+
 * Introduction
 This is a simple script to allow people to search mail directories in a remote server for mails matching specific
 filters without having to rely on any external program or UI. The only action to do with them at the moment is to delete them.
