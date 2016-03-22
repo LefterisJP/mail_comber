@@ -13,12 +13,12 @@ In the future other actions like, copying or displaying the emails can be added.
 The ~argparse~ module does not exist in python 2.6.6 so please either install it from pypi or [[https://pypi.python.org/pypi/argparse][download]] it manually and
 add ~argparse.py~ at the same directory as mail_comber.
 
-
 * Usage
 At the time of writting of the readme the options can be seen below:
 #+BEGIN_SRC
 usage: mail_comber.py [-h] [--dir DIR] [--subject-pattern SUBJECT_PATTERN]
                       [--from-pattern FROM_PATTERN] [--to-pattern TO_PATTERN]
+                      [--mailing-list-pattern MAILING_LIST_PATTERN]
                       [--limit LIMIT] [--dry]
 
 Mail comber
@@ -32,6 +32,9 @@ optional arguments:
                         Regular expression to match in the email from header
   --to-pattern TO_PATTERN
                         Regular expression to match in the email to header
+  --mailing-list-pattern MAILING_LIST_PATTERN
+                        Regular expression to match in the email's Mailing-
+                        List header
   --limit LIMIT         Set a limit to the number of emails to scan
   --dry                 When given, will not actually delete anything but just
                         run through the script's steps
@@ -60,4 +63,9 @@ They are:
 *** Delete all mail containing [llvm-dev] in the subject
 #+BEGIN_SRC
 ./mail_comber.py --dir MAILDIR --subject-pattern ".*\[llvm-dev\].*"
+#+END_SRC
+
+*** Delete all mail from the meetup.com mailing list
+#+BEGIN_SRC 
+./mail_comber.py --dir MAILDIR --mailing-list-pattern ".*@meetup\.com.*" 
 #+END_SRC

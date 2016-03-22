@@ -42,23 +42,39 @@ class Comber():
             self.from_re = re.compile(args.from_pattern)
         if args.to_pattern:
             self.to_re = re.compile(args.to_pattern)
+        if args.mailing_list_pattern:
+            self.mailing_list_re = re.compile(args.mailing_list_pattern)
+
+    def check_header(self, headers, got_match, header):
+        attr = '{0}_re'.format(header.replace("-", "_"))
+        if headers[header] and hasattr(self, attr):
+            re = getattr(self, attr)
+            if not re.match(headers[header]):
+                return False, got_match
+            else:
+                got_match = True
+        return True, got_match
 
     def process_mail(self, name, data):
         headers = Parser().parsestr(data)
-        if headers['subject'] and hasattr(self, 'subject_re'):
-            match = self.subject_re.match(headers['subject'])
-            if not match:
-                return False
+        match = False
 
-        if headers['from'] and hasattr(self, 'from_re'):
-            match = self.from_re.match(headers['from'])
-            if not match:
-                return False
+        success, match = self.check_header(headers, match, 'subject')
+        if not success:
+            return False
+        success, match = self.check_header(headers, match, 'from')
+        if not success:
+            return False
+        success, match = self.check_header(headers, match, 'to')
+        if not success:
+            return False
+        success, match = self.check_header(headers, match, 'mailing-list')
+        if not success:
+            return False
 
-        if headers['to'] and hasattr(self, 'to_re'):
-            match = self.to_re.match(headers['to'])
-            if not match:
-                return False
+        # if there was no match at any of the filters go out
+        if not match:
+            return False
 
         subject = headers['subject'] if headers['subject'] else "No Subject"
         if self.args.dry:
@@ -104,6 +120,10 @@ if __name__ == "__main__":
     p.add_argument(
         "--to-pattern",
         help="Regular expression to match in the email to header"
+    )
+    p.add_argument(
+        "--mailing-list-pattern",
+        help="Regular expression to match in the email's Mailing-List header"
     )
     p.add_argument(
         "--limit",
