@@ -1,0 +1,47 @@
+
+* Introduction
+This is a simple script to allow people to search mail directories in a remote server for mails matching specific
+filters without having to rely on any external program or UI. The only action to do with them at the moment is to delete them.
+
+
+In the future other actions like, copying or displaying the emails can be added.
+
+** Python 2.6.6 warning:
+The ~argparse~ module does not exist in python 2.6.6 so please either install it from pypi or [[https://pypi.python.org/pypi/argparse][download]] it manually and
+add ~argparse.py~ at the same directory as mail_comber.
+
+
+* Usage
+At the time of writting of the readme the options can be seen below:
+#+BEGIN_SRC
+usage: mail_comber.py [-h] [--dir DIR] [--subject-pattern SUBJECT_PATTERN]
+                      [--from-pattern FROM_PATTERN] [--to-pattern TO_PATTERN]
+                      [--limit LIMIT] [--dry]
+
+Mail comber
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dir DIR             The directory to work in
+  --subject-pattern SUBJECT_PATTERN
+                        Regular expression to match in the email subject
+  --from-pattern FROM_PATTERN
+                        Regular expression to match in the email from header
+  --to-pattern TO_PATTERN
+                        Regular expression to match in the email to header
+  --limit LIMIT         Set a limit to the number of emails to scan
+  --dry                 When given, will not actually delete anything but just
+                        run through the script's steps
+
+#+END_SRC
+
+They are:
+- *dir*:
+  The directory to search for mails.
+- *patterns*:
+  Patterns to match in the searched email headers. If all given patterns match then the email is a match and
+  action will be taken.
+- *limit*:
+  A numeric limit on how many emails to act upon. If given then once this many emails have been acted upon the script will stop.
+- *dry*:
+  Will perform a dry run. Won't act on anything, but simply say what it would have done if the argument had not been given.
