@@ -26,6 +26,39 @@ __author__ = "Lefteris Karapetsas<lefteris@refu.co>"
 __license__ = "MIT"
 
 
+def query_yes_no(question, default="no"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+
 def rm_file(f):
     try:
         os.remove(f)
@@ -33,19 +66,36 @@ def rm_file(f):
         pass
 
 
+def has_only_wildcards(str):
+    return str.replace(".", "").replace("*", "") == ""
+
+
 class Comber():
     def __init__(self, args):
         self.args = args
-        if args.subject_pattern:
-            self.subject_re = re.compile(args.subject_pattern)
-        if args.from_pattern:
-            self.from_re = re.compile(args.from_pattern)
-        if args.to_pattern:
-            self.to_re = re.compile(args.to_pattern)
-        if args.mailing_list_pattern:
-            self.mailing_list_re = re.compile(args.mailing_list_pattern)
-        if args.list_id_pattern:
-            self.list_id_re = re.compile(args.list_id_pattern)
+        self.prepare_pattern(args, 'subject')
+        self.prepare_pattern(args, 'from')
+        self.prepare_pattern(args, 'to')
+        self.prepare_pattern(args, 'mailing-list')
+        self.prepare_pattern(args, 'list-id')
+
+    def prepare_pattern(self, args, name):
+        normalized_name = name.replace("-", "_")
+        attr = "{0}_pattern".format(normalized_name)
+        if hasattr(args, attr) and getattr(args, attr) is not None:
+            pattern = getattr(args, attr)
+            if has_only_wildcards(pattern):
+                if not query_yes_no(
+                        "[WARNING] Provided pattern for '{0}' will match all "
+                        "emails! Are you 100% certain you want this?".format(
+                            name)):
+                    print("Quitting as requested...")
+                    sys.exit(0)
+            setattr(
+                self,
+                "{0}_re".format(normalized_name),
+                re.compile(pattern)
+            )
 
     def check_header(self, headers, got_match, header):
         attr = '{0}_re'.format(header.replace("-", "_"))

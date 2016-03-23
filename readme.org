@@ -1,6 +1,7 @@
 
 * Disclaimer
 Read the source, understand what it does and don't blame me if you lose data. Use the script at your own risk.
+I recommend making a backup of the mail directory before running this script on it.
 
 * Introduction
 This is a simple script to allow people to search mail directories in a remote server for mails matching specific
@@ -43,6 +44,9 @@ optional arguments:
   --dry                 When given, will not actually delete anything but just
                         run through the script's steps
 #+END_SRC
+
+Note that the script will warn you if your pattern contains only wildcards and as such
+would match all emails. Most of the times this means a mistake on your part.
 
 ** Options
 They are:
